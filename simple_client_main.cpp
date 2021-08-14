@@ -3,26 +3,56 @@
 #include <iostream>
 #include <string>
 
+
+void mutherClient(ClientSocket &socket)
+{
+	std::string	rdata;
+	std::string sdata;
+	
+	//Initial client/server handshake
+	socket >> rdata;
+	if( rdata == "Connecting to client" )
+	{
+		std::cout << "Terminal connected \n\n\n" << std::endl;
+	}
+	
+	socket << "Client connected";
+	
+	// Main chat routine
+	bool stateWaiting{true};
+	
+	while( sdata != ":q" )
+	{
+		if( stateWaiting )
+		{
+			socket >> rdata;
+			std::cout << "Muther:\t\t" << rdata;
+			stateWaiting = false;
+		}
+		else
+		{
+			std::cout << "Terminal:\t";
+			std::getline(std::cin, sdata);
+			socket << sdata  << "\n";
+			stateWaiting = true;
+		}
+	}
+}
+
 int main ( int argc, char* argv[] )
 {
   try
     {
 
-      ClientSocket client_socket ( "localhost", 30000 );
+		ClientSocket client_socket ( "localhost", 30000 );
 
-      std::string reply;
-
-      try
-	{
-	  client_socket << "Test message.";
-	  client_socket >> reply;
-	}
-      catch ( SocketException& ) {}
-
-      std::cout << "We received this response from the server:\n\"" << reply << "\"\n";;
-
+		try
+		{
+			mutherClient(client_socket);
+		}
+		catch ( SocketException& ) {}
     }
-  catch ( SocketException& e )
+	catch ( SocketException& e )
     {
       std::cout << "Exception was caught:" << e.description() << "\n";
     }
