@@ -41,6 +41,8 @@ void mutherClient(ClientSocket &socket)
 			stateWaiting = true;
 		}
 	}
+	
+	std::cout << "Terminating connection" << std::endl;
 }
 
 int main ( int argc, char* argv[] )

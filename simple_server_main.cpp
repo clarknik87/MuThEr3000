@@ -41,6 +41,8 @@ void mutherServer(ServerSocket &socket)
 			stateWaiting = true;
 		}
 	}
+	
+	std::cout << "Terminating connection" << std::endl;
 }
 
 
@@ -64,6 +66,7 @@ int main ( int argc, char* argv[] )
 	  try
 	    {
 	      mutherServer(new_sock);
+		  break;
 	    }
 	  catch ( SocketException& ) {}
 
