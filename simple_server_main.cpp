@@ -31,8 +31,12 @@ void mutherServer(ServerSocket &socket)
 		}
 		else
 		{
+			sdata.clear();
 			std::cout << "Terminal:\t";
-			std::getline(std::cin, sdata);
+			while( sdata.empty() )
+			{
+				std::getline(std::cin, sdata);
+			}
 			socket << sdata << "\n";
 			stateWaiting = true;
 		}
