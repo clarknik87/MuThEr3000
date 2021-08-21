@@ -19,27 +19,16 @@ void mutherServer(ServerSocket &socket)
 	}
 
 	// Main chat routine
-	bool stateWaiting{false};
 	
 	while( sdata != ":q" )
 	{
-		if( stateWaiting )
+		sdata.clear();
+		std::cout << "Terminal:\t";
+		while( sdata.empty() )
 		{
-			socket >> rdata;
-			std::cout << "Client:\t\t" << rdata;
-			stateWaiting = false;
+			std::getline(std::cin, sdata);
 		}
-		else
-		{
-			sdata.clear();
-			std::cout << "Terminal:\t";
-			while( sdata.empty() )
-			{
-				std::getline(std::cin, sdata);
-			}
-			socket << sdata << "\n";
-			stateWaiting = true;
-		}
+		socket << sdata << "\n";
 	}
 	
 	std::cout << "Terminating connection" << std::endl;

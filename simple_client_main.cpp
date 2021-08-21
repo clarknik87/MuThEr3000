@@ -2,7 +2,33 @@
 #include "SocketException.h"
 #include <iostream>
 #include <string>
+#include <thread>
+#include <mutex>
+#include <queue>
+#include <chrono>
 
+using namespace std::chrono_literals;
+
+std::queue<std::string> chatqueue;
+std::mutex queuem;
+bool quitReadThread{false};
+
+void readSocket(ClientSocket *socket)
+{
+	if(socket != nullptr)
+	{
+		std::string socket_data;
+		std::unique_lock<std::mutex> lk(queuem, std::defer_lock);
+		
+		while(!quitReadThread)
+		{
+			(*socket) >> socket_data;
+			lk.lock();
+			chatqueue.push(socket_data);
+			lk.unlock();
+		}
+	}
+}
 
 void mutherClient(ClientSocket &socket)
 {
@@ -18,30 +44,27 @@ void mutherClient(ClientSocket &socket)
 	
 	socket << "Client connected";
 	
-	// Main chat routine
-	bool stateWaiting{true};
+	// Start thread for reading incoming messages
+	std::thread readthread(readSocket, &socket);
 	
-	while( sdata != ":q" )
+	// Read and print client side data
+	std::unique_lock<std::mutex> lk(queuem, std::defer_lock);
+	while( rdata != ":q" )
 	{
-		if( stateWaiting )
+		const auto start_t = std::chrono::steady_clock::now();
+		lk.lock();
+		if( !chatqueue.empty() )
 		{
-			socket >> rdata;
-			std::cout << "Muther:\t\t" << rdata;
-			stateWaiting = false;
+			rdata = chatqueue.front();
+			chatqueue.pop();
+			std::cout << rdata;
 		}
-		else
-		{
-			sdata.clear();
-			std::cout << "Terminal:\t";
-			while( sdata.empty() )
-			{
-				std::getline(std::cin, sdata);
-			}
-			socket << sdata  << "\n";
-			stateWaiting = true;
-		}
+		lk.unlock();
+		std::this_thread::sleep_until( start_t + 40ms ); //25 fps
 	}
 	
+	quitReadThread = true;
+	readthread.join();
 	std::cout << "Terminating connection" << std::endl;
 }
 
