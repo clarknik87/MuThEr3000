@@ -19,13 +19,18 @@ void readSocket(ClientSocket *socket)
 	{
 		std::string socket_data;
 		std::unique_lock<std::mutex> lk(queuem, std::defer_lock);
+		bool socketTerminated{false};
 		
-		while(!quitReadThread)
+		while(!quitReadThread && !socketTerminated)
 		{
 			(*socket) >> socket_data;
 			lk.lock();
 			chatqueue.push(socket_data);
 			lk.unlock();
+			if( socket_data == ":q\n" )
+			{
+				socketTerminated = true;
+			}
 		}
 	}
 }
@@ -49,7 +54,7 @@ void mutherClient(ClientSocket &socket)
 	
 	// Read and print client side data
 	std::unique_lock<std::mutex> lk(queuem, std::defer_lock);
-	while( rdata != ":q" )
+	while( rdata != ":q\n" )
 	{
 		const auto start_t = std::chrono::steady_clock::now();
 		lk.lock();
