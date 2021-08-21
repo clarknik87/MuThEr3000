@@ -52,7 +52,8 @@ std::string& handle_input(WINDOW *win, int ch)
 	static auto str_it = str.end();
 	static int pos{0};
 	if( ch != ERR )
-	{		
+	{	
+		ch = getch();
 		switch(ch)
 		{
 		case 9: //tab
