@@ -1,5 +1,6 @@
 #include "ClientSocket.h"
 #include "SocketException.h"
+#include "cursesWrapper.hpp"
 #include <iostream>
 #include <string>
 #include <thread>
