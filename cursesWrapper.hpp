@@ -6,10 +6,11 @@
 #include <csignal>
 #include <cstdlib>
 #include <string>
+#include <iostream>
 
 enum class Color
 {
-	none,
+	white,
 	red,
 	green,
 	yellow,
@@ -34,16 +35,41 @@ void init_color()
 	}
 }
 
-void init_curses(WINDOW *mainwin)
+void init_curses(WINDOW *inputwin)
 {
 	setlocale(LC_ALL, "");
     initscr();
-	keypad(mainwin, true);
+	keypad(inputwin, true);
 	cbreak();
 	noecho();
-	nodelay(mainwin, true);
+	nodelay(inputwin, true);
 	//signal(SIGWINCH, handle_sigwinch);
 	CursesWrapper::init_color();
+}
+
+void configureWindows(WINDOW *chatwin, WINDOW *inputwin)
+{
+	int sizex, sizey;
+	getmaxyx(stdscr, sizey, sizex);
+	
+	//Place interior windows
+	chatwin = 	newwin(sizey-26, sizex-4, 10, 2);
+	inputwin =	newwin(10, sizex-4, sizey-12, 2);
+	
+	if( chatwin == nullptr || inputwin == nullptr )
+	{
+		std::cerr << "Error creating internal windows" << std::endl;
+	}
+	else
+	{
+		scrollok(chatwin, true);
+	}
+}
+
+void deleteWindows(WINDOW *chatwin, WINDOW *inputwin)
+{
+	delwin(chatwin);
+	delwin(inputwin);
 }
 
 std::string& handle_input(WINDOW *win, int ch)

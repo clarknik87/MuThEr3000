@@ -37,41 +37,61 @@ void readSocket(ClientSocket *socket)
 }
 
 void mutherClient(ClientSocket &socket)
-{
-	std::string	rdata;
-	std::string sdata;
-	
+{	
 	//Initial client/server handshake
+	std::string	rdata;
 	socket >> rdata;
-	if( rdata == "Connecting to client" )
+	if( rdata != "Connecting to client" )
 	{
-		std::cout << "Terminal connected \n\n\n" << std::endl;
+		std::cerr << "Server-Client Handshake failed" << std::endl;
 	}
-	
-	socket << "Client connected";
+	else
+	{
+		socket << "Client connected";
+	}
 	
 	// Start thread for reading incoming messages
 	std::thread readthread(readSocket, &socket);
+	
+	// Start ncurses environment
+	WINDOW *chatwin;
+	WINDOW *inputwin;
+	CursesWrapper::init_curses(inputwin);
+	CursesWrapper::configureWindows(chatwin, inputwin);
 	
 	// Read and print client side data
 	std::unique_lock<std::mutex> lk(queuem, std::defer_lock);
 	while( rdata != ":q\n" )
 	{
 		const auto start_t = std::chrono::steady_clock::now();
+		
+		// Print any new data from server
 		lk.lock();
 		if( !chatqueue.empty() )
 		{
 			rdata = chatqueue.front();
 			chatqueue.pop();
-			std::cout << rdata;
+			wprintw(stdscr, "    MU-TH-ER: %s", rdata.c_str());
 		}
 		lk.unlock();
+		
+		// Get any new character data from user
+		
+		// Refresh all screens
+		refresh();
+		//wrefresh(chatwin);
+		//wrefresh(inputwin);
+		
 		std::this_thread::sleep_until( start_t + 40ms ); //25 fps
 	}
 	
 	quitReadThread = true;
 	readthread.join();
-	std::cout << "Terminating connection" << std::endl;
+	
+	// End curses environment
+	CursesWrapper::deleteWindows(chatwin, inputwin);
+	endwin();
+    refresh();
 }
 
 int main ( int argc, char* argv[] )
