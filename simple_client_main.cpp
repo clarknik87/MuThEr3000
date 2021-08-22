@@ -56,11 +56,31 @@ void mutherClient(ClientSocket &socket)
 	// Start ncurses environment
 	WINDOW *chatwin;
 	WINDOW *inputwin;
-	CursesWrapper::init_curses(inputwin);
-	CursesWrapper::configureWindows(chatwin, inputwin);
+	CursesWrapper::start_curses();
+	
+	//configure windows
+	int sizex, sizey;
+	getmaxyx(stdscr, sizey, sizex);
+	
+	//Place interior windows
+	chatwin = 	newwin(sizey-26, sizex-4, 10, 2);
+	inputwin =	newwin(10, sizex-4, sizey-12, 2);
+	
+	if( chatwin == nullptr || inputwin == nullptr )
+	{
+		std::cerr << "Error creating internal windows" << std::endl;
+		exit(1);
+	}
+	else
+	{
+		scrollok(chatwin, true);
+		keypad(inputwin, true);
+		nodelay(inputwin, true);
+	}
 	
 	// Read and print client side data
 	std::unique_lock<std::mutex> lk(queuem, std::defer_lock);
+	int i=0;
 	while( rdata != ":q\n" )
 	{
 		const auto start_t = std::chrono::steady_clock::now();
@@ -71,7 +91,7 @@ void mutherClient(ClientSocket &socket)
 		{
 			rdata = chatqueue.front();
 			chatqueue.pop();
-			wprintw(stdscr, "    MU-TH-ER: %s", rdata.c_str());
+			wprintw(chatwin, "    MU-TH-ER: %s", rdata.c_str());
 		}
 		lk.unlock();
 		
@@ -79,8 +99,8 @@ void mutherClient(ClientSocket &socket)
 		
 		// Refresh all screens
 		refresh();
-		//wrefresh(chatwin);
-		//wrefresh(inputwin);
+		wrefresh(chatwin);
+		wrefresh(inputwin);
 		
 		std::this_thread::sleep_until( start_t + 40ms ); //25 fps
 	}
@@ -89,7 +109,8 @@ void mutherClient(ClientSocket &socket)
 	readthread.join();
 	
 	// End curses environment
-	CursesWrapper::deleteWindows(chatwin, inputwin);
+	//delwin(chatwin);
+	//delwin(inputwin);
 	endwin();
     refresh();
 }

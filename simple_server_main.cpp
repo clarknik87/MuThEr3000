@@ -1,5 +1,6 @@
 #include "ServerSocket.h"
 #include "SocketException.h"
+#include "cursesWrapper.hpp"
 #include <string>
 #include <iostream>
 
