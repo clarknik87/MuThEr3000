@@ -80,6 +80,7 @@ void mutherClient(ClientSocket &socket)
 	
 	// Read and print client side data
 	std::unique_lock<std::mutex> lk(queuem, std::defer_lock);
+	std::string sdata;
 	int i=0;
 	while( rdata != ":q\n" )
 	{
@@ -96,6 +97,11 @@ void mutherClient(ClientSocket &socket)
 		lk.unlock();
 		
 		// Get any new character data from user
+		if( CursesWrapper::handle_input(inputwin, sdata) == true )
+		{
+			//socket << sdata;
+			wprintw(chatwin, "    Terminal: %s\n", sdata.c_str());
+		}
 		
 		// Refresh all screens
 		refresh();

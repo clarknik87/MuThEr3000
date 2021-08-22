@@ -31,8 +31,9 @@ void start_curses()
 	CursesWrapper::init_color();
 }
 
-bool handle_input(WINDOW *win, std::string& outstr, int ch)
+bool handle_input(WINDOW *win, std::string& outstr)
 {
+	int ch;
 	static std::string str;
 	static auto str_it = str.end();
 	static int pos{0};
@@ -62,11 +63,12 @@ bool handle_input(WINDOW *win, std::string& outstr, int ch)
 			}
 			break;
 		case 10: //enter
-			printw("\n you entered: %s\n", str.c_str());
+			outstr = str;
 			str.clear();
 			pos = 0;
 			str_it = str.end();
-			outstr = str;
+			wdeleteln(win);
+			wmove(win, 0, 0);
 			return true;
 			break;
 		case KEY_DC: //delete

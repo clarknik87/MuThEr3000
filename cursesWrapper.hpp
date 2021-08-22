@@ -22,7 +22,7 @@ void init_color();
 
 void start_curses();
 
-bool handle_input(WINDOW *win, std::string& outstr, int ch);
+bool handle_input(WINDOW *win, std::string& outstr);
 
 }
 #endif
