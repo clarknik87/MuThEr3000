@@ -18,11 +18,11 @@ simple_client: $(simple_client_objects)
 	g++ $(compiler_flags) -o simple_client $(simple_client_objects) $(linker_flags)
 
 
-Socket: Socket.cpp
-ServerSocket: ServerSocket.cpp
-ClientSocket: ClientSocket.cpp
-simple_server_main: simple_server_main.cpp cursesWrapper.hpp
-simple_client_main: simple_client_main.cpp cursesWrapper.hpp
+Socket: Socket.cpp Socket.h
+ServerSocket: ServerSocket.cpp SocketException.h ServerSocket.h
+ClientSocket: ClientSocket.cpp SocketException.h ClientSocket.h
+simple_server_main: simple_server_main.cpp cursesWrapper.hpp SocketException.h ServerSocket.h
+simple_client_main: simple_client_main.cpp cursesWrapper.hpp SocketException.h ClientSocket.h
 
 
 clean:
