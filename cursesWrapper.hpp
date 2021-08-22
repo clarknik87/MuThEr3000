@@ -22,10 +22,6 @@ void init_color();
 
 void start_curses();
 
-void configureWindows(WINDOW *chatwin, WINDOW *inputwin);
-
-void deleteWindows(WINDOW *chatwin, WINDOW *inputwin);
-
 bool handle_input(WINDOW *win, std::string& outstr, int ch);
 
 }

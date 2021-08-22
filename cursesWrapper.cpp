@@ -25,39 +25,10 @@ void start_curses()
 {
 	setlocale(LC_ALL, "");
     initscr();
-	//cbreak();
-	//noecho();
+	cbreak();
+	noecho();
 	//signal(SIGWINCH, handle_sigwinch);
-	//CursesWrapper::init_color();
-}
-
-void configureWindows(WINDOW *chatwin, WINDOW *inputwin)
-{
-	int sizex, sizey;
-	getmaxyx(stdscr, sizey, sizex);
-	
-	//Place interior windows
-	chatwin = 	newwin(sizey-26, sizex-4, 10, 2);
-	inputwin =	newwin(10, sizex-4, sizey-12, 2);
-	
-	if( chatwin == nullptr || inputwin == nullptr )
-	{
-		std::cerr << "Error creating internal windows" << std::endl;
-		exit(1);
-	}
-	else
-	{
-		//scrollok(chatwin, true);
-		//keypad(inputwin, true);
-		//nodelay(inputwin, true);
-		;
-	}
-}
-
-void deleteWindows(WINDOW *chatwin, WINDOW *inputwin)
-{
-	delwin(chatwin);
-	delwin(inputwin);
+	CursesWrapper::init_color();
 }
 
 bool handle_input(WINDOW *win, std::string& outstr, int ch)

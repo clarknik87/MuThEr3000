@@ -109,10 +109,9 @@ void mutherClient(ClientSocket &socket)
 	readthread.join();
 	
 	// End curses environment
-	//delwin(chatwin);
-	//delwin(inputwin);
+	delwin(chatwin);
+	delwin(inputwin);
 	endwin();
-    refresh();
 }
 
 int main ( int argc, char* argv[] )
