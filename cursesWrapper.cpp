@@ -19,6 +19,7 @@ void init_color()
 		init_pair(5,  COLOR_MAGENTA, COLOR_BLACK);
 		init_pair(6,  COLOR_CYAN,    COLOR_BLACK);
 	}
+	color_set(2, nullptr);
 }
 
 void start_curses()
@@ -36,6 +37,22 @@ void draw_borders(WINDOW *chatborder, WINDOW *inputborder)
 	box(stdscr, 0, 0);
 	box(chatborder, 0, 0);
 	box(inputborder, 0, 0);
+	
+	std::string	line1{" __   __  __   __         _______  __   __         _______  ______           _______  _______  _______  _______ "};
+	std::string	line2{"|  |_|  ||  | |  |       |       ||  | |  |       |       ||    _ |         |       ||  _    ||  _    ||  _    |"};
+	std::string	line3{"|       ||  | |  | ____  |_     _||  |_|  | ____  |    ___||   | ||   ____  |___    || | |   || | |   || | |   |"};
+	std::string	line4{"|       ||  |_|  ||____|   |   |  |       ||____| |   |___ |   |_||_ |____|  ___|   || | |   || | |   || | |   |"};
+	std::string	line5{"|       ||       |         |   |  |       |       |    ___||    __  |       |___    || |_|   || |_|   || |_|   |"};
+	std::string	line6{"| ||_|| ||       |         |   |  |   _   |       |   |___ |   |  | |        ___|   ||       ||       ||       |"};
+	std::string	line7{"|_|   |_||_______|         |___|  |__| |__|       |_______||___|  |_|       |_______||_______||_______||_______|"};
+
+	mvwprintw(stdscr, 1, 4, line1.c_str());
+	mvwprintw(stdscr, 2, 4, line2.c_str());
+	mvwprintw(stdscr, 3, 4, line3.c_str());
+	mvwprintw(stdscr, 4, 4, line4.c_str());
+	mvwprintw(stdscr, 5, 4, line5.c_str());
+	mvwprintw(stdscr, 6, 4, line6.c_str());
+	mvwprintw(stdscr, 7, 4, line7.c_str());
 
 	wrefresh(stdscr);
 	wrefresh(chatborder);
