@@ -71,12 +71,12 @@ void mutherClient(ClientSocket &socket)
 		std::cerr << "Error creating internal windows" << std::endl;
 		exit(1);
 	}
-	else
-	{
-		scrollok(chatwin, true);
-		keypad(inputwin, true);
-		nodelay(inputwin, true);
-	}
+	
+	scrollok(chatwin, true);
+	keypad(stdscr, true);
+	keypad(inputwin, true);
+	nodelay(inputwin, true);
+	
 	
 	// Read and print client side data
 	std::unique_lock<std::mutex> lk(queuem, std::defer_lock);
