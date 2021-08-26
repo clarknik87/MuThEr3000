@@ -44,6 +44,7 @@ void mutherClient(ClientSocket &socket)
 	if( rdata != "Connecting to client" )
 	{
 		std::cerr << "Server-Client Handshake failed" << std::endl;
+		exit(1);
 	}
 	else
 	{
@@ -105,7 +106,7 @@ void mutherClient(ClientSocket &socket)
 		{
 			rdata = chatqueue.front();
 			chatqueue.pop();
-			wprintw(chatwin, "    MU-TH-ER: %s", rdata.c_str());
+			wprintw(chatwin, "    MU-TH-ER: %s\n", rdata.c_str());
 		}
 		lk.unlock();
 		
