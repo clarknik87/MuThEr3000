@@ -24,5 +24,7 @@ void start_curses();
 
 bool handle_input(WINDOW *win, std::string& outstr);
 
+void draw_borders(WINDOW *chatborder, WINDOW *inputborder);
+
 }
 #endif

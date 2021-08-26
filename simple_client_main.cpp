@@ -55,7 +55,9 @@ void mutherClient(ClientSocket &socket)
 	
 	// Start ncurses environment
 	WINDOW *chatwin;
+	WINDOW *chatborder;
 	WINDOW *inputwin;
+	WINDOW *inputborder;
 	CursesWrapper::start_curses();
 	
 	//configure windows
@@ -63,8 +65,10 @@ void mutherClient(ClientSocket &socket)
 	getmaxyx(stdscr, sizey, sizex);
 	
 	//Place interior windows
-	chatwin = 	newwin(sizey-26, sizex-4, 10, 2);
-	inputwin =	newwin(10, sizex-4, sizey-12, 2);
+	chatwin 	= 	newwin(sizey-26, sizex-6, 10, 3);
+	chatborder 	= 	newwin(sizey-24, sizex-4, 9, 2);
+	inputwin 	=	newwin(10, sizex-6, sizey-12, 3);
+	inputborder =	newwin(12, sizex-4, sizey-13, 2);
 	
 	if( chatwin == nullptr || inputwin == nullptr )
 	{
@@ -73,6 +77,8 @@ void mutherClient(ClientSocket &socket)
 	}
 	
 	scrollok(chatwin, true);
+	scrollok(inputwin, true);
+	scrollok(stdscr, true);
 	keypad(stdscr, true);
 	keypad(inputwin, true);
 	nodelay(inputwin, true);
@@ -80,6 +86,13 @@ void mutherClient(ClientSocket &socket)
 	
 	// Read and print client side data
 	std::unique_lock<std::mutex> lk(queuem, std::defer_lock);
+	
+	// Move cursor to starting position
+	CursesWrapper::draw_borders(chatborder, inputborder);
+	wmove(inputwin, 2, 2);
+	wrefresh(inputwin);
+	
+	// Main loop
 	std::string sdata;
 	int i=0;
 	while( rdata != ":q\n" )
@@ -99,12 +112,12 @@ void mutherClient(ClientSocket &socket)
 		// Get any new character data from user
 		if( CursesWrapper::handle_input(inputwin, sdata) == true )
 		{
-			//socket << sdata;
+			socket << sdata;
 			wprintw(chatwin, "    Terminal: %s\n", sdata.c_str());
 		}
 		
 		// Refresh all screens
-		refresh();
+		wrefresh(stdscr);
 		wrefresh(chatwin);
 		wrefresh(inputwin);
 		

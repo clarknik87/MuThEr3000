@@ -31,6 +31,17 @@ void start_curses()
 	CursesWrapper::init_color();
 }
 
+void draw_borders(WINDOW *chatborder, WINDOW *inputborder)
+{	
+	box(stdscr, 0, 0);
+	box(chatborder, 0, 0);
+	box(inputborder, 0, 0);
+
+	wrefresh(stdscr);
+	wrefresh(chatborder);
+	wrefresh(inputborder);
+}
+
 bool handle_input(WINDOW *win, std::string& outstr)
 {
 	int ch;
@@ -68,7 +79,7 @@ bool handle_input(WINDOW *win, std::string& outstr)
 			pos = 0;
 			str_it = str.end();
 			wdeleteln(win);
-			wmove(win, 0, 0);
+			wmove(win, 2, 2);
 			return true;
 			break;
 		case KEY_DC: //delete
