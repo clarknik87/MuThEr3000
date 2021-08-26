@@ -82,6 +82,7 @@ void mutherClient(ClientSocket &socket)
 	scrollok(stdscr, true);
 	keypad(stdscr, true);
 	keypad(inputwin, true);
+	nodelay(stdscr, true);
 	nodelay(inputwin, true);
 	
 	

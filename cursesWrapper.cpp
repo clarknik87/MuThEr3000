@@ -68,77 +68,78 @@ bool handle_input(WINDOW *win, std::string& outstr)
 	if( ch != ERR )
 	{	
 		ch = getch();
-		switch(ch)
+		if(ch != ERR)
 		{
-		case 9: //tab
-			for(int i=0;i<4;++i)
+			switch(ch)
 			{
-				winsch(win,' ');
-				wmove(win,getcury(win),getcurx(win)+1);
-				str_it = str.insert(str_it,' ');
-				++str_it;
-			}
-			break;
-		case 127: //backspace
-			if(getcurx(win) > 0)
-			{
-				wmove(win,getcury(win),getcurx(win)-1);
+			case 9: //tab
+				for(int i=0;i<4;++i)
+				{
+					winsch(win,' ');
+					wmove(win,getcury(win),getcurx(win)+1);
+					str_it = str.insert(str_it,' ');
+					++str_it;
+				}
+				break;
+			case 127: //backspace
+				if(getcurx(win) > 0)
+				{
+					wmove(win,getcury(win),getcurx(win)-1);
+					wdelch(win);
+					if(pos > 0)
+						++pos;
+					if(str_it != str.begin())
+						str_it = str.erase(--str_it);
+				}
+				break;
+			case 10: //enter
+				outstr = str;
+				str.clear();
+				pos = 0;
+				str_it = str.end();
+				wdeleteln(win);
+				wmove(win, 2, 2);
+				return true;
+				break;
+			case KEY_DC: //delete
 				wdelch(win);
 				if(pos > 0)
-					++pos;
-				if(str_it != str.begin())
-					str_it = str.erase(--str_it);
-			}
-			break;
-		case 10: //enter
-			outstr = str;
-			str.clear();
-			pos = 0;
-			str_it = str.end();
-			wdeleteln(win);
-			wmove(win, 2, 2);
-			return true;
-			break;
-		case KEY_DC: //delete
-			wdelch(win);
-			if(pos > 0)
-				--pos;
-			if(str_it != str.end())
-					str_it = str.erase(str_it);
-			break;
-		case KEY_UP:
-			break;
-		case KEY_DOWN:
-			break;
-		case KEY_LEFT:
-			if(getcurx(win) > 0)
-			{
-				wmove(win,getcury(win),getcurx(win)-1);
-				++pos;
-				if(str_it != str.begin())
-					--str_it;
-			}
-			break;
-		case KEY_RIGHT:
-			if(pos > 0)
-			{
-				wmove(win,getcury(win),getcurx(win)+1);
-				--pos;
+					--pos;
 				if(str_it != str.end())
+						str_it = str.erase(str_it);
+				break;
+			case KEY_UP:
+				break;
+			case KEY_DOWN:
+				break;
+			case KEY_LEFT:
+				if(getcurx(win) > 0)
+				{
+					wmove(win,getcury(win),getcurx(win)-1);
+					++pos;
+					if(str_it != str.begin())
+						--str_it;
+				}
+				break;
+			case KEY_RIGHT:
+				if(pos > 0)
+				{
+					wmove(win,getcury(win),getcurx(win)+1);
+					--pos;
+					if(str_it != str.end())
+						++str_it;
+				}
+				break;
+			default:
+				if(ch >= 32 && ch <=126)
+				{
+					winsch(win, ch);
+					wmove(win,getcury(win),getcurx(win)+1);
+					str_it = str.insert(str_it,ch);
 					++str_it;
+				}
+				break;
 			}
-			break;
-		default:
-			if(ch >= 32 && ch <=126)
-			{
-				winsch(win, ch);
-				wmove(win,getcury(win),getcurx(win)+1);
-				str_it = str.insert(str_it,ch);
-				++str_it;
-			}
-			else
-				printw(" %s ",keyname(ch));
-			break;
 		}
 	}
 	return false;

@@ -82,6 +82,7 @@ void mutherServer(ServerSocket &socket)
 	scrollok(stdscr, true);
 	keypad(stdscr, true);
 	keypad(inputwin, true);
+	nodelay(stdscr, true);
 	nodelay(inputwin, true);
 	
 	
@@ -105,7 +106,7 @@ void mutherServer(ServerSocket &socket)
 		{
 			rdata = chatqueue.front();
 			chatqueue.pop();
-			wprintw(chatwin, "    MU-TH-ER: %s\n", rdata.c_str());
+			wprintw(chatwin, "    Terminal: %s\n", rdata.c_str());
 		}
 		lk.unlock();
 		
@@ -113,7 +114,7 @@ void mutherServer(ServerSocket &socket)
 		if( CursesWrapper::handle_input(inputwin, sdata) == true )
 		{
 			socket << sdata;
-			wprintw(chatwin, "    Terminal: %s\n", sdata.c_str());
+			wprintw(chatwin, "    MU-TH-ER: %s\n", sdata.c_str());
 		}
 		
 		// Refresh all screens
