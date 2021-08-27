@@ -144,7 +144,7 @@ int main ( int argc, char* argv[] )
   try
     {
       // Create the socket
-      ServerSocket server ( 30000 );
+      ServerSocket server ( 1416 );
 
       while ( true )
 	{
