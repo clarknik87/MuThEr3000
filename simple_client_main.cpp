@@ -140,7 +140,7 @@ int main ( int argc, char* argv[] )
   try
     {
 
-		ClientSocket client_socket ( "localhost", 30000 );
+		ClientSocket client_socket ( "192.168.0.104", 1416 );
 
 		try
 		{

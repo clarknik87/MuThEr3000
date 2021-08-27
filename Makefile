@@ -3,7 +3,7 @@
 
 CXX = g++
 CXXFLAGS = -std=c++14
-LDFLAGS = -lcurses
+LDFLAGS = -lcurses -lpthread
 
 simple_server_objects = ServerSocket.o Socket.o simple_server_main.o cursesWrapper.o
 simple_client_objects = ClientSocket.o Socket.o simple_client_main.o cursesWrapper.o
