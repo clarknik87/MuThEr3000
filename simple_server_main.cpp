@@ -68,7 +68,7 @@ void mutherServer(ServerSocket &socket)
 	//Place interior windows
 	chatwin 	= 	newwin(sizey-26, sizex-6, 10, 3);
 	chatborder 	= 	newwin(sizey-24, sizex-4, 9, 2);
-	inputwin 	=	newwin(10, sizex-6, sizey-12, 3);
+	inputwin 	=	newwin(10, sizex-8, sizey-12, 5);
 	inputborder =	newwin(12, sizex-4, sizey-13, 2);
 	
 	if( chatwin == nullptr || inputwin == nullptr )
@@ -91,7 +91,7 @@ void mutherServer(ServerSocket &socket)
 	
 	// Move cursor to starting position
 	CursesWrapper::draw_borders(chatborder, inputborder);
-	wmove(inputwin, 2, 2);
+	wmove(inputwin, 2, 0);
 	wrefresh(inputwin);
 	
 	// Main loop

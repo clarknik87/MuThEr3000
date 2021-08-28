@@ -98,7 +98,7 @@ bool handle_input(WINDOW *win, std::string& outstr)
 				pos = 0;
 				str_it = str.end();
 				wdeleteln(win);
-				wmove(win, 2, 2);
+				wmove(win, 2, 0);
 				return true;
 				break;
 			case KEY_DC: //delete
