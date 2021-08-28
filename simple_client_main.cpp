@@ -114,8 +114,11 @@ void mutherClient(ClientSocket &socket)
 		// Get any new character data from user
 		if( CursesWrapper::handle_input(inputwin, sdata) == true )
 		{
-			socket << sdata;
-			wprintw(chatwin, "    Terminal: %s\n", sdata.c_str());
+			if( !sdata.empty() )
+			{
+				socket << sdata;
+				wprintw(chatwin, "    Terminal: %s\n", sdata.c_str());
+			}
 		}
 		
 		// Refresh all screens
