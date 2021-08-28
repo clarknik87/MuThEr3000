@@ -81,6 +81,8 @@ bool handle_input(WINDOW *win, std::string& outstr)
 					++str_it;
 				}
 				break;
+			case KEY_BACKSPACE:
+				__attribute__((fallthrough));
 			case 127: //backspace
 				if(getcurx(win) > 0)
 				{
